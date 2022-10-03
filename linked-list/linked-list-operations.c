@@ -100,18 +100,60 @@ void deleteAtEnd(struct node **head) {
 }
 
 void deleteAtPosition(struct node **head, int position) {
-    
+    if (*head == NULL) {
+        printf("Empty List\n");
+        return;
+    }
+    struct node *temp = *head;
+    if (position == 1) {
+        *head = (*head)->next;
+        free(temp);
+        return;
+    }
+    for (int i = 1; i < position - 1 && temp != NULL; i++) {
+        temp = temp->next;
+    }
+    if (temp == NULL || temp->next == NULL) {
+        printf("Invalid Position\n");
+        return;
+    }
+    struct node *temp1 = temp->next;
+    temp->next = temp->next->next;
+    free(temp1);
+}
+
+
+void deleteAfter(struct node *head, int after) {
+    if (head == NULL) {
+        printf("Empty List\n");
+        return;
+    }
+    struct node *temp = head;
+    while (temp != NULL && temp->data != after) {
+        temp = temp->next;
+    }
+    if (temp == NULL || temp->next == NULL) {
+        printf("Invalid Position\n");
+        return;
+    }
+    struct node *temp1 = temp->next;
+    temp->next = temp->next->next;
+    free(temp1);
+}
 
 
 // Traversal
 
 void traverse(struct node *head) {
-    struct node *temp = head;
-    while (temp != NULL) {
-        printf("%d ", temp->data);
-        temp = temp->next;
+    if (head == NULL) {
+        printf("Empty List\n");
+        return;
     }
-    printf("Empty List");
+    while (head != NULL) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
 }
 
 // Search
@@ -132,38 +174,83 @@ int main(){
     // initializing liked list
     struct node *head = NULL;
 
-    // inserting elements
-    insertAtBeginning(&head, 1);
-    insertAtEnd(&head, 2);
-    insertAtEnd(&head, 3);
-    insertAtEnd(&head, 4);
+    // menu
+    int choice, data, after, position;
+    while (1) {
+        printf("\n-----------------------\nMENU:\n\
+1. Insert at beginning\n\
+2. Insert at end\n\
+3. Insert after\n\
+4. Insert at position\n\
+5. Delete at beginning\n\
+6. Delete at end\n\
+7. Delete after\n\
+8. Delete at position\n\
+9. Traverse\n\
+10. Search\n\
+11. Exit\n\
+-----------------------\
+\nEnter your choice: ");
+        scanf("%d", &choice);
+        printf("\n");
 
-    // traversing linked list
-    traverse(head);
-
-    // inserting element at position
-    insertAtPosition(&head, 5, 3);
-    traverse(head);
-
-    // inserting element after a given element
-    insertAfter(head, 6, 3);
-    traverse(head);
-
-    // deleting element at beginning
-    deleteAtBeginning(&head); 
-    traverse(head);
-
-    // deleting element at end
-    deleteAtEnd(&head);
-    traverse(head);
-
-    // d
-
-    // searching element
-    if (search(head, 5)) {
-        printf("Element Found");
-    } else {
-        printf("Element Not Found");
-    }
-
+        switch (choice) {
+            case 1:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                insertAtBeginning(&head, data);
+                break;
+            case 2:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                insertAtEnd(&head, data);
+                break;
+            case 3:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                printf("Enter after: ");
+                scanf("%d", &after);
+                insertAfter(head, data, after);
+                break;
+            case 4:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                printf("Enter position: ");
+                scanf("%d", &position);
+                insertAtPosition(&head, data, position);
+                break;
+            case 5:
+                deleteAtBeginning(&head);
+                break;
+            case 6:
+                deleteAtEnd(&head);
+                break;
+            case 7:
+                printf("Enter after: ");
+                scanf("%d", &after);
+                deleteAfter(head, after);
+                break;
+            case 8:
+                printf("Enter position: ");
+                scanf("%d", &position);
+                deleteAtPosition(&head, position);
+                break;
+            case 9:
+                traverse(head);
+                break;
+            case 10:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                if (search(head, data)) {
+                    printf("Found\n");
+                } else {
+                    printf("Not Found\n");
+                }
+                break;
+            case 11:
+                exit(0);
+            default:
+                printf("Invalid Choice\n");
+        }
+}
 }
